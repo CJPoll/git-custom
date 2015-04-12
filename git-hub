@@ -1,2 +1,35 @@
 #! /usr/local/bin/zsh
-git clone "https://github.com/$1";
+
+function clone()
+{
+    GITHUB_REF=$1;
+    git clone "https://github.com/${GITHUB_REF}";
+}
+
+function create-repo()
+{
+    GITHUB_REF=$1;
+    git remote add origin "git@github.com:${GITHUB_REF}.git"
+    git push -u origin master
+}
+
+function main()
+{
+    COMMAND=$1;
+
+    if [ -z ${COMMAND} ]; then
+        echo "git-hub needs a command";
+        exit;
+    fi
+
+    if [ ${COMMAND} == "clone" ]; then
+        GITHUB_REF=$2;
+        clone $GITHUB_REF;
+    fi
+
+    if [ ${COMMAND} == "new" ]; then
+        GITHUB_REF=$2;
+        create-repo ${GITHUB_REF};
+    fi
+}
+
