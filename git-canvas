@@ -1,0 +1,17 @@
+#! /usr/bin/env ruby
+
+require 'git_command'
+
+command :update do
+  system 'cd ~/dev/canvas-lms &&\
+    git gerrit pull     &&\
+    bundle update       &&\
+    npm install         &&\
+    npm update          &&\
+    rake db:migrate     &&\
+    git canvas assets;'
+end
+
+command :assets do
+	system 'rake canvas:compile_assets'
+end

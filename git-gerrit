@@ -1,0 +1,23 @@
+#! /usr/bin/env ruby
+require 'git_command'
+
+command :push do |branch: 'HEAD'|
+	`git push origin HEAD:refs/for/master`
+end
+
+command :pull do |branch: 'HEAD'|
+    `git push origin HEAD:refs/for/master`
+end
+
+command :clone do |repo_name: 'canvas-lms'|
+    `git clone gerrit:#{args.first}`
+end
+
+command :commit do
+    system 'git commit -v --amend'
+end
+
+command :'full-commit' do
+	system 'git add .'
+	system 'git gerrit commit'
+end

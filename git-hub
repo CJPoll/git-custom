@@ -1,35 +1,12 @@
-#! /usr/local/bin/zsh
+#! /usr/bin/env ruby
+require 'git_command'
 
-function clone()
-{
-    GITHUB_REF=$1;
-    git clone "https://github.com/${GITHUB_REF}";
-}
+command :clone do |repo_name|
+	`git clone https://github.com/#{ repo_name }`
+end
 
-function create-repo()
-{
-    GITHUB_REF=$1;
-    git remote add origin "git@github.com:${GITHUB_REF}.git"
-    git push -u origin master
-}
-
-function main()
-{
-    COMMAND=$1;
-
-    if [ -z ${COMMAND} ]; then
-        echo "git-hub needs a command";
-        exit;
-    fi
-
-    if [ ${COMMAND} == "clone" ]; then
-        GITHUB_REF=$2;
-        clone $GITHUB_REF;
-    fi
-
-    if [ ${COMMAND} == "new" ]; then
-        GITHUB_REF=$2;
-        create-repo ${GITHUB_REF};
-    fi
-}
-
+command :create do |user_name, repo_name|
+	system "curl -u '#{ user_name }' https://api.github.com/user/repos -d '{\"name\":\"#{ repo_name }\"}'"
+	system "git remote add origin git@github.com:#{ user_name }/#{ repo_name }.git"
+	system "git push -u origin master"
+end
