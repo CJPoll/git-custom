@@ -6,15 +6,19 @@ command :push do |branch: 'HEAD'|
 end
 
 command :pull do |branch: 'HEAD'|
-    `git push origin HEAD:refs/for/master`
+	`git push origin HEAD:refs/for/master`
 end
 
 command :clone do |repo_name: 'canvas-lms'|
-    `git clone gerrit:#{args.first}`
+	`git clone gerrit:#{args.first}`
 end
 
-command :commit do
-    system 'git commit -v --amend'
+command :commit do |generate: false|
+	if generate
+		system `git commit -v`
+	else
+		system 'git commit -v --amend'
+	end
 end
 
 command :'full-commit' do
