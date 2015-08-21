@@ -2,16 +2,44 @@
 
 require 'git_command'
 
+command :compile do
+		system 'bundle update			 &&\
+    bundle install &&\
+    npm install &&\
+    npm update &&\
+		rake db:migrate			 &&\
+		git canvas assets;'
+end
+
 command :update do
-  system 'cd ~/dev/canvas-lms &&\
-    git gerrit pull     &&\
-    bundle update       &&\
-    npm install         &&\
-    npm update          &&\
-    rake db:migrate     &&\
-    git canvas assets;'
+	system 'git gerrit pull		 &&\
+    git canvas compile'
 end
 
 command :assets do
 	system 'rake canvas:compile_assets'
+end
+
+databases = ['canvast_test', 'canvast_development', 'canvast_queue_development']
+
+command :teardown do
+	databases.each do |database|
+		system "psql --command=\"DROP DATABASE #{ database };\""
+	end
+end
+
+command :setup do
+	databases.each do |database|
+		system "createdb #{ database }"
+	end
+
+	system "rake db:migrate RAILS_ENV=test"
+	system "rake db:test:prepare"
+	system "rake db:initial_setup"
+	system "rake db:migrate"
+end
+
+command :reset do
+	system "git canvas teardown"
+	system "git canvas setup"
 end

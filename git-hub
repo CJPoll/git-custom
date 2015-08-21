@@ -10,3 +10,7 @@ command :create do |user_name, repo_name|
 	system "git remote add origin git@github.com:#{ user_name }/#{ repo_name }.git"
 	system "git push -u origin master"
 end
+
+command :push do
+	system "git push origin master"
+end
