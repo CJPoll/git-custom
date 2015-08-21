@@ -20,7 +20,7 @@ command :assets do
 	system 'rake canvas:compile_assets'
 end
 
-databases = ['canvast_test', 'canvast_development', 'canvast_queue_development']
+databases = ['canvas_test', 'canvas_development', 'canvas_queue_development']
 
 command :teardown do
 	databases.each do |database|
