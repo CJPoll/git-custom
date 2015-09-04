@@ -3,17 +3,17 @@
 require 'git_command'
 
 command :compile do
-		system 'bundle update			 &&\
-    bundle install &&\
-    npm install &&\
-    npm update &&\
+	system 'bundle update			 &&\
+		bundle install &&\
+		npm install &&\
+		npm update &&\
 		rake db:migrate			 &&\
 		git canvas assets;'
 end
 
 command :update do
 	system 'git gerrit pull		 &&\
-    git canvas compile'
+		git canvas compile'
 end
 
 command :assets do
@@ -33,10 +33,11 @@ command :setup do
 		system "createdb #{ database }"
 	end
 
-	system "rake db:migrate RAILS_ENV=test"
-	system "rake db:test:prepare"
 	system "rake db:initial_setup"
 	system "rake db:migrate"
+	system "rake db:migrate RAILS_ENV=test"
+	system "rake db:test:prepare"
+	system "rake db:seed"
 end
 
 command :reset do
